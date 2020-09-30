@@ -3,16 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/585054a426.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="resources/reset.css">
+    <link rel="stylesheet" href="resources/style.css">
     <title>QUIZ</title>
 </head>
 <body>
-    <header id="header"></header>
-    <main></main>
+    <header id="header">
+        <div class="header_left"></div>
+        <div id="question_container" class="question_container">
+            <!-- <h1>What's the name of your first pet?</h1> -->
+        </div>
+        <div class="header_right"></div>
+    </header>
+    <main>
+        <div id="answers_container" class="answers_container">
+            <ul id="list">
+                <!-- <li>Alicia</li>
+                <li>Amanda</li>
+                <li>Amalia</li>
+                <li>Aila</li>
+                <li>Askungen</li> -->
+            </ul>
+            
 
 
-    <script src="js/main.js"></script>
-    <script src="js/question.js"></script>
-    <script src="js/quiz.js"></script>
-    <script src="js/questions.js"></script>
+            
+            <div class="status_bar">
+                <i class="fas fa-chevron-circle-left fa-2x"></i>
+                <p>2 / 10</p>
+                <!-- <i class="fas fa-circle-notch fa-3x"></i> -->
+                <i class="fas fa-chevron-circle-right fa-2x"></i>
+            </div>
+            <!--TODO: correct or incorrect icons -->
+            <!-- <i class="fas fa-check-circle fa-3x"></i>
+            <i class="fas fa-times-circle fa-3x"></i>
+ -->
+
+
+        </div>
+
+
+    </main>
+    <footer>
+    </footer>
+
+
+    <script src="resources/js/main.js"></script>
+    <script src="resources/js/question.js"></script>
+    <script src="resources/js/quiz.js"></script>
+    <script src="resources/js/questions.js"></script>
 </body>
 </html>
