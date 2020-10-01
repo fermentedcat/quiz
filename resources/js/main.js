@@ -1,158 +1,22 @@
 document.addEventListener("DOMContentLoaded", function(e) {
-    let main = document.getElementsByTagName("main")[0];
+    new Start().getPlayerInfo();
     
     
     
 
 
-   /*  class Player {
-        constructor() {
-            this.name;
-            this.score; //// eller två, right/wrong
-            this.score_arr = new Array(10);
-        }
-        handleScore(is_correct, index) {
-            this.score_arr[index] = is_correct;
-            console.log(this.score_arr);
-        }
+    
 
-    } */
+    
 
-    /* class Start {   //// steg 1 på sidan / håller i spelarens val
-        constructor() {
-            this.num_questions = 10;
-            this.category = "programming";
-            this.player = new Player()
-        }
-        newQuiz() {
+    
 
-        }
-    } */
+    
 
-    class Quiz {
-        constructor(length, difficulty, category) {
-            this.length = length;
-            this.difficulty = difficulty;
-            this.category = category;
-            this.questions;
-
-            
-            
-        }
-        startQuiz() { 
-            //// quiz api programming
-            fetch("https://quizapi.io/api/v1/questions?apiKey=C8BWSol6V6TUpmrsb7Zz17pdZoQuzcB9enTsztNA&limit=" + this.length + "&difficulty=" + this.difficulty + "&tags=" + this.category)
-            .then(response => response.json())
-            .then(data => {
-                let questions = new Questions(data); //// send random questions to Questions to start
-                let answers = new Answers(data);
-
-                //TODO: nåt sätt att göra detta snyggare med sync/wait?
-                let status_bar = document.getElementById("status_bar");
-                
-                let back_button = document.createElement("i");
-                back_button.className = "fas fa-chevron-circle-left fa-2x";
-                status_bar.appendChild(back_button);
-                back_button.addEventListener("click", function(e) {
-                    if (questions.counter > 1 ) {
-                        questions.changeQuestion("back");
-                        answers.changeAnswers("back");
-                    }
-                })
-                let show_number = document.createElement("p");
-                show_number.id = "show_number"
-                show_number.innerHTML = questions.counter + " / " + this.length;
-                status_bar.appendChild(show_number);
-
-                let button = document.createElement("i");
-                button.className = "fas fa-chevron-circle-right fa-2x";
-                status_bar.appendChild(button);
-                button.addEventListener("click", event => {
-                    if (questions.counter < this.length) {
-                        questions.changeQuestion("fwd");
-                        answers.changeAnswers("fwd");
-                    }
-
-                })
-            });
-        }
-    }
-
-    class Questions {
-        constructor(fetched_obj) {
-            this.questions = fetched_obj;
-            for (let question of this.questions) {
-                console.log(question);
-            }
-            this.counter = 0; //// keeps track of which question to show
-
-            let q_container = document.getElementById("question_container");
-            this.currentQuestion = document.createElement("h1");
-            q_container.appendChild(this.currentQuestion);
-        }
-        
-
-        changeQuestion(step) {
-            if (step == "back") {
-                this.counter -= 2;
-            }
-            let question = this.questions[this.counter].question;
-            question = question.replace(/\</g,"&lt;");
-            this.currentQuestion.innerHTML = question;
-            this.counter++;
-            document.getElementById("show_number").innerHTML = this.counter + " / " + this.questions.length;
-        }
-
-    }
-
-    class Answers {
-        constructor(fetched_obj) {
-            this.answers = fetched_obj;
-            this.counter = 0;
-            this.option_paths = ["answer_a", "answer_b", "answer_c", "answer_d", "answer_e", "answer_f"];
-            this.is_correct_paths = this.option_paths.map(function(path) {
-                return path + "_correct";
-            })
-            this.player_choices = new Array(fetched_obj.length).fill(false); // rätt/fel svar sparas
-            
-            this.answers_container = document.getElementById("list");
-                
-            
-        }
-        changeAnswers(step) { 
-            while (this.answers_container.firstChild) { // ta bort alla svarsalt från förra frågan
-                this.answers_container.removeChild(this.answers_container.lastChild);
-            }
-            if (step == "back") {
-                this.counter -= 2;
-            }
-            for (let i = 0; i < 6; i++) {
-                let answer = this.answers[this.counter].answers[this.option_paths[i]];
-                if (answer != null) { // answers with value null should not be displayed
-                    let option = document.createElement("li");
-                    
-                    let is_correct = this.answers[this.counter].correct_answers[this.is_correct_paths[i]]; // this option is    true = correct || false = incorrect
-                    
-                    let regex_answer = answer.replace(/\</g,"&lt;"); 
-                    option.innerHTML = regex_answer;
-                    this.answers_container.appendChild(option);
-                    option.addEventListener("click", event => {
-                        this.player_choices[this.counter - 1] = is_correct; 
-                        // counter redan +1. sparar val till array i constructor
-                    })
-                    
-                } 
-            }
-            this.counter++;
-        }
-        checkAnswer() {
-            
-        }
-        
-    }
+    
     let quiz = new Quiz(10, "Easy", "JavaScript");
     quiz.startQuiz();
-    /* let player = new Player(); */
+    console.log(quiz.player.name);
 
 
     /* class Question {
@@ -169,3 +33,104 @@ document.addEventListener("DOMContentLoaded", function(e) {
     /* let questions = new Questions();
     questions.changeQuestion("hello"); */
 });
+
+class Start {   //// steg 1 på sidan / håller i spelarens val
+    constructor() {
+        this.filled = false;
+        this.player_name = "";
+        this.player_category = "";
+        this.player_number = 0;
+
+        this.header_container = document.getElementById("question_container");
+        this.main_inner = document.getElementById("main_inner");
+    }
+    getPlayerInfo() {
+        let header = document.createElement("h1");
+        header.innerHTML = "QUIZ TIME!"
+        this.header_container.appendChild(header);
+
+        //TODO: gör om till FORM
+        let input = document.createElement("input");
+        input.className = "player_info";
+        input.placeholder = "Enter your name here";
+        this.main_inner.appendChild(input);
+        input.focus();
+        let category = document.createElement("select");
+        category.className = "player_info";
+        this.main_inner.appendChild(category);
+
+        let cat_descr = document.createElement("option");
+        let cat_opt1 = document.createElement("option");
+        let cat_opt2 = document.createElement("option");
+        let cat_opt3 = document.createElement("option");
+
+        cat_descr.disabled = true;
+        cat_descr.selected = true;
+        cat_descr.hidden = true;
+        
+        cat_descr.value = "";
+        cat_opt1.value = "Programming";
+        cat_opt2.value = "JavaScript";
+        cat_opt3.value = "HTML";
+
+        cat_descr.innerHTML = "Choose a category";
+        cat_opt1.innerHTML = "Programming";
+        cat_opt2.innerHTML = "JavaScript";
+        cat_opt3.innerHTML = "HTML";
+
+        category.appendChild(cat_descr);
+        category.appendChild(cat_opt1);
+        category.appendChild(cat_opt2);
+        category.appendChild(cat_opt3);
+
+        let number = document.createElement("select");
+        number.className = "player_info";
+        this.main_inner.appendChild(number);
+
+        let num_descr = document.createElement("option");
+        let num_opt1 = document.createElement("option");
+        let num_opt2 = document.createElement("option");
+        let num_opt3 = document.createElement("option");
+
+        num_descr.disabled = true;
+        num_descr.selected = true;
+        num_descr.hidden = true;
+
+        num_descr.value = "";
+        num_opt1.value = 5;
+        num_opt2.value = 10;
+        num_opt3.value = 15;
+
+        num_descr.innerHTML = "Choose a number";
+        num_opt1.innerHTML = 5;
+        num_opt2.innerHTML = 10;
+        num_opt3.innerHTML = 15;
+
+        number.appendChild(num_descr);
+        number.appendChild(num_opt1);
+        number.appendChild(num_opt2);
+        number.appendChild(num_opt3);
+
+        let submit = document.createElement("button");
+        submit.className = "submit_button"
+        submit.innerHTML = "SUBMIT";
+        // submit.disabled = true;
+        this.main_inner.appendChild(submit);
+
+        input.addEventListener("keyup", e => {
+            if (e.code == "Enter") {
+                let trimmed = input.value.trim();
+                if (trimmed.length > 0) {
+                    this.player_name = trimmed;
+                    console.log(this.player_name);
+                    category.focus();
+                }
+            }
+        })
+
+    }
+
+    newQuiz() {
+
+    }
+}
