@@ -49,7 +49,7 @@ main {
     width: 100vw;
 }
 
-.answers_container {
+.main_inner {
     display: flex;
     flex-direction: column;
     width: 60vw;
@@ -59,20 +59,31 @@ main {
     font-weight: 300;
     color: rgb(31, 31, 38);/*// main p */
 }
+input.player_info {
+    text-indent: 0.2em;
+    line-height: 1.2em;
+}
+form,
 button.submit_button,
 select.player_info,
 input.player_info {
-    width: 170px;
+    width: 13em;
     align-self: center;
+}
+button.submit_button,
+select.player_info,
+input.player_info {
     -ms-box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box; 
     box-sizing: border-box;
     padding: 3px;
+    border: none;
     color: rgb(128, 128, 128);
+    margin-bottom: 0.3em;
 }
 button.submit_button {
-    margin-top: 10px;
+    margin-top: 1em;
     color: rgb(31, 31, 38);
     border: 3px outset;
 
@@ -84,6 +95,7 @@ button.submit_button {
     opacity: 0.6;
 
 }
+
 
 ul {
     padding: 2em;

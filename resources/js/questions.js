@@ -5,6 +5,9 @@ class Questions {
             console.log(question);
         }
         this.counter = 0; //// keeps track of which question to show
+        
+
+        
 
         let q_container = document.getElementById("question_container");
         this.currentQuestion = document.createElement("h1");
@@ -12,15 +15,14 @@ class Questions {
     }
     
 
-    changeQuestion(step) {
-        if (step == "back") {
-            this.counter -= 2;
-        }
+    changeQuestion(direction) {
+        this.counter -= direction;
+        console.log(this.counter);
         let question = this.questions[this.counter].question;
         question = question.replace(/\</g,"&lt;");
         this.currentQuestion.innerHTML = question;
         this.counter++;
-        document.getElementById("show_number").innerHTML = this.counter + " / " + this.questions.length;
+        document.getElementById("show_number").innerHTML = this.counter + " / " + this.questions.length;  //visar vilken fråga
     }
 
 }

@@ -1,5 +1,5 @@
 class Answers {
-    constructor(fetched_obj) {
+    constructor(fetched_obj, parent) {
         this.answers = fetched_obj;
         this.counter = 0;
         this.option_paths = ["answer_a", "answer_b", "answer_c", "answer_d", "answer_e", "answer_f"];
@@ -8,17 +8,19 @@ class Answers {
         })
         this.player_choices = new Array(fetched_obj.length).fill(false); // rätt/fel svar sparas
         
-        this.answers_container = document.getElementById("list");
+        let main = document.getElementById("main_inner");
+        this.answers_container = document.createElement("ul");
+        this.answers_container.className = "list";
+        main.appendChild(this.answers_container);
             
         
     }
-    changeAnswers(step) { 
+    changeAnswers(direction) { 
         while (this.answers_container.firstChild) { // ta bort alla svarsalt från förra frågan
             this.answers_container.removeChild(this.answers_container.lastChild);
         }
-        if (step == "back") {
-            this.counter -= 2;
-        }
+        this.counter -= direction;
+
         for (let i = 0; i < 6; i++) {
             let answer = this.answers[this.counter].answers[this.option_paths[i]];
             if (answer != null) { // answers with value null should not be displayed
