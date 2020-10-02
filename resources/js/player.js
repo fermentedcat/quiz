@@ -1,7 +1,7 @@
 class Player {
     constructor(name) {
         this.name = name;
-        this.score; //// eller två, right/wrong
+        this.score = 0; //// eller två, right/wrong
         this.score_arr = new Array(10);
     }
     handleScore(is_correct, index) {

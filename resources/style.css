@@ -63,6 +63,9 @@ input.player_info {
     text-indent: 0.2em;
     line-height: 1.2em;
 }
+form {
+    margin-top: 3em;
+}
 form,
 button.submit_button,
 select.player_info,
@@ -105,13 +108,20 @@ li {
     list-style-type: disc;
     list-style-position: inside;
     font-size: 1.3em;
-    padding: 0.5em;
     width: 100%;
+    transition: all 0.1s ease-in;
+    border-radius: 20em;
+    margin: 0.3em;
+    padding: 0.7em;
 }
 li:hover {    
     background-color: rgb(197, 205, 219);/*// main bg / h1 */
 
-    border-radius: 20em;
+}
+
+li.chosen,
+li:active {
+    background-color:rgb(215, 215, 49);
 }
 
 #status_bar {
