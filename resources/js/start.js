@@ -11,7 +11,7 @@ class Start {   //// steg 1 på sidan / håller i spelarens val / skapar Quiz oc
     }
     
     newQuiz() {
-        this.quiz = new Quiz(this.input_number, this.input_difficulty, this.input_category);
+        this.quiz = new Quiz(this.input_number, this.input_difficulty, this.input_category, this.input_name);
     }
     getPlayerInfo() {
         let header = document.createElement("h1");
@@ -90,34 +90,14 @@ class Start {   //// steg 1 på sidan / håller i spelarens val / skapar Quiz oc
         difficulty.appendChild(dif_opt3);
 
 
-        let number = document.createElement("select");
+        let number = document.createElement("input");
+        number.type = "number";
+        number.min = 5;
+        number.max = 10;
+        number.placeholder = "Number of questions";
         number.className = "player_info";
         number.required = true;
         form.appendChild(number);
-
-        let num_descr = document.createElement("option");
-        let num_opt1 = document.createElement("option");
-        let num_opt2 = document.createElement("option");
-        let num_opt3 = document.createElement("option");
-
-        num_descr.disabled = true;
-        num_descr.selected = true;
-        num_descr.hidden = true;
-
-        num_descr.value = "";
-        num_opt1.value = 5;
-        num_opt2.value = 10;
-        num_opt3.value = 15;
-
-        num_descr.innerHTML = "Number of questions";
-        num_opt1.innerHTML = 5;
-        num_opt2.innerHTML = 10;
-        num_opt3.innerHTML = 15;
-
-        number.appendChild(num_descr);
-        number.appendChild(num_opt1);
-        number.appendChild(num_opt2);
-        number.appendChild(num_opt3);
 
 
         let submit = document.createElement("button");

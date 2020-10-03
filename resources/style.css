@@ -67,12 +67,14 @@ form {
     margin-top: 3em;
 }
 form,
+button.sumbit_answers,
 button.submit_button,
 select.player_info,
 input.player_info {
     width: 13em;
     align-self: center;
 }
+button.sumbit_answers,
 button.submit_button,
 select.player_info,
 input.player_info {
@@ -85,20 +87,31 @@ input.player_info {
     color: rgb(128, 128, 128);
     margin-bottom: 0.3em;
 }
+button.sumbit_answers,
 button.submit_button {
+    background-color: rgb(239, 240, 243);
     margin-top: 1em;
+    height: 2.5em;
+    padding-top: 0.28em;
     color: rgb(31, 31, 38);
-    border: 3px outset;
-
+    border: none;
+    border-radius: 20px;
+    transition: all 0.15s ease-in-out;
 }
-.submit_button:disabled {
-    color: rgb(128, 128, 128);
-    background-color: rgb(238, 238, 238);
-    border: 3px outset;
-    opacity: 0.6;
-
+button.sumbit_answers:hover,
+button.submit_button:hover {
+    background-color: rgb(215, 215, 49);
 }
 
+button.sumbit_answers:active,
+button.submit_button:active {
+    background-color: rgb(206, 206, 67);
+}
+
+button.sumbit_answers {
+    position: absolute;
+    bottom: 5em;
+}
 
 ul {
     padding: 2em;
@@ -109,7 +122,7 @@ li {
     list-style-position: inside;
     font-size: 1.3em;
     width: 100%;
-    transition: all 0.1s ease-in;
+    transition: all 0.15s ease-in-out;
     border-radius: 20em;
     margin: 0.3em;
     padding: 0.7em;
@@ -119,9 +132,12 @@ li:hover {
 
 }
 
-li.chosen,
-li:active {
+li.chosen {
     background-color:rgb(215, 215, 49);
+}
+
+li:active {
+    background-color:rgb(206, 206, 67);
 }
 
 
@@ -143,11 +159,17 @@ li:active {
     display: block;
     margin: 0 auto;
     align-self: center; 
+    transition: all 0.15s ease-in-out;
 }
 
 .fa-chevron-circle-right:hover,
 .fa-chevron-circle-left:hover {
     color: rgb(215, 215, 49);
+}
+
+.fa-chevron-circle-right:active,
+.fa-chevron-circle-left:active {
+    color: rgb(206, 206, 67);
 }
 
 #status_bar p {

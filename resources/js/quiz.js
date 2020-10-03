@@ -1,14 +1,13 @@
 class Quiz {
-    constructor(num_of_questions, difficulty, category) {
+    constructor(num_of_questions, difficulty, category, name) {
         this.num_of_questions = num_of_questions;
         this.difficulty = difficulty;
         this.category = category;
         this.questions;
-        this.player = new Player(this.input_name);
-        this.fetched_questions;
-        this.player_answers = new Array(this.num_of_questions).fill([null]); // spelarens svar sparas här
-        console.log("player answers arr: ");
-        console.log(this.player_answers);
+        this.player = new Player(name, num_of_questions);
+        // this.player_answers = new Array(this.num_of_questions).fill([null]); // spelarens svar sparas här
+        this.is_answered = false;
+        
         
         this.startQuiz();
     }
@@ -22,8 +21,7 @@ class Quiz {
 
         .then(response => response.json())
         .then(data => {
-            this.fetched_questions = data;
-            this.questions = new Questions(this.fetched_questions, this); //// send random questions to Questions to start
+            this.questions = new Questions(data, this); //// send random questions to Questions to start
             // this.answers = new Answers(this.fetched_questions, this);
             this.loadButtons();
         });
@@ -52,7 +50,7 @@ class Quiz {
         status_bar.appendChild(button);
         button.addEventListener("click", e => {
             if (this.questions.counter < this.num_of_questions) {
-                this.questions.nextQuestion(); //TODO: other parameter? true/false?
+                this.questions.nextQuestion(); 
             }
         })
 
@@ -60,7 +58,7 @@ class Quiz {
     }
     
     handleScore(score, index) {
-        let arr = this.player_answers[index]; // platsen för spelarens svar denna fråga
+        let arr = this.player.current_answers[index]; // platsen för spelarens svar denna fråga
         
         if (arr.includes(null)) { //// if no score has been added - add score
             arr = [score];
@@ -73,28 +71,47 @@ class Quiz {
             arr.splice(remove_index, 1);
         }
         
-        this.player_answers[index] = arr;
+        this.player.current_answers[index] = arr;
         console.log(arr);
         console.log("index: " + index);
-        console.log(this.player_answers);
+        console.log(this.player.current_answers);
 
-            // bool
-        let is_answered = true;
-        for (let answer of this.player_answers) {
-            if (answer.includes(null)) {
-                is_answered = false;
+        //TODO: funkar ej. läs på om async / timeout
+        this.is_answered = true; // resets in case prev. answer get unclicked
+        //check if all questions have been answered
+        for (let answer of this.player.current_answers) {
+                console.log("new check");
+                if (answer.includes(null)) {
+                this.is_answered = false;
+                console.log("new check, some null");
             }
         }
+        //TODO: funkar ej. läs på om async / timeout
+        if (!this.is_answered && document.getElementById("main_inner").lastChild.tagName == "BUTTON") {
+            console.log("should remove button");
+            document.getElementById("main_inner").lastChild.remove();
+        }
+        console.log(this.is_answered);
 
-        console.log(is_answered);
         //check if all questions have been answered
-        if (index == 9 && this.player_answers.includes(null)) {
+        if (index == 9 && !this.is_answered) { // let player know of missing answers if on last question
             alert("There are questions unanswered still. Please go back and answer.")
-        } else if (is_answered) {
+        } else if (this.is_answered) {
             console.log("Finito");
+            this.loadSubmitButton();
         }
     }
-    checkCorrectAnswers() {
+    loadSubmitButton() {
+        /* if (document.getElementById("main_inner").lastChild.tagName == "BUTTON") {
+            document.getElementById("main_inner").lastChild.remove();
+        } */
+        let submit = document.createElement("button");
+        submit.innerHTML = "SUBMIT ANSWERS";
+        submit.className = "sumbit_answers";
+        document.getElementById("main_inner").appendChild(submit);
+        submit.addEventListener("click", (e) => {
+            this.questions.checkCorrect(this.player.current_answers, this.questions.correct_answers); 
+        })
 
     }
 }
