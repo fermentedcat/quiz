@@ -44,19 +44,19 @@ class Questions {
                 let answer_button = document.createElement("li");
                 let is_correct = this.questions[this.counter].correct_answers[this.is_correct_paths[i]]; // this answer_button is    true = correct || false = incorrect
 
-                if (this.parent.player_answers[this.counter] == answer) {
-                    answer_button.className = "chosen"; // change styling of already chosen
+                if (this.parent.player_answers[this.counter].includes(answer)) {
+                    answer_button.className = "chosen"; //// change styling of already chosen
                 }
                 
                 let regex_answer = answer.replace(/\</g,"&lt;"); 
                 answer_button.innerHTML = regex_answer;
                 this.answers_container.appendChild(answer_button);
                 answer_button.addEventListener("click", event => {
-                    // let current_elements = 
-                    for (let element of Array.from(this.answers_container.childNodes)) {
-                        element.className = " "; // change styling of already chosen
+                    if (event.target.className == "chosen") {
+                        event.target.className = "";
+                    } else {
+                        event.target.className = "chosen";
                     }
-                    event.target.className = "chosen";
                     
                     // this.player_choices[this.counter] = is_correct; 
                     // counter redan +1. sparar val till array i constructor

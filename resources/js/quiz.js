@@ -6,7 +6,9 @@ class Quiz {
         this.questions;
         this.player = new Player(this.input_name);
         this.fetched_questions;
-        this.player_answers = new Array(this.num_of_questions).fill(null); // spelarens svar sparas här
+        this.player_answers = new Array(this.num_of_questions).fill([null]); // spelarens svar sparas här
+        console.log("player answers arr: ");
+        console.log(this.player_answers);
         
         this.startQuiz();
     }
@@ -59,47 +61,38 @@ class Quiz {
     
     handleScore(score, index) {
         let arr = this.player_answers[index]; // platsen för spelarens svar denna fråga
-        let is_array = Array.isArray(arr);
         
-        if (arr == null) {
-            arr = score;
-        } else if (arr != score && !arr.includes(score)) {
-            console.log("what to do here..");
-            if (!is_array) { //// is not array, one string value
-                console.log("!is_array"); 
-                arr = [arr, score];
-            } else if (!arr.includes(score)) { //// is array, several string values
-                arr.push(score);
-                console.log("is_array");
-
-            }
+        if (arr.includes(null)) { //// if no score has been added - add score
+            arr = [score];
+        } else if (!arr.includes(score)) { //// does not include score - add score
+            console.log("does not include score");
+            arr.push(score);
         } else {
-            if (!is_array) {
-                arr = null;
-            }
-            else {
-                let remove_index = arr.indexOf(score);
-                console.log("splice");
-                arr.splice(remove_index, 1);
-            }
-            // console.log("IndexOf: " + arr.indexOf(score));
+            let remove_index = arr.indexOf(score);
+            console.log("splice");
+            arr.splice(remove_index, 1);
         }
         
         this.player_answers[index] = arr;
         console.log(arr);
-        // console.log(this.player_answers);
+        console.log("index: " + index);
+        console.log(this.player_answers);
 
-        
+            // bool
+        let is_answered = true;
+        for (let answer of this.player_answers) {
+            if (answer.includes(null)) {
+                is_answered = false;
+            }
+        }
+
+        console.log(is_answered);
         //check if all questions have been answered
         if (index == 9 && this.player_answers.includes(null)) {
             alert("There are questions unanswered still. Please go back and answer.")
-        } else if (!this.player_answers.includes(null)) {
+        } else if (is_answered) {
             console.log("Finito");
-        }/*  else {
-            setTimeout(() => {
-                this.questions.nextQuestion();
-            }, 150);
-        } */
+        }
     }
     checkCorrectAnswers() {
 
