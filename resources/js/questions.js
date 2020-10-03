@@ -31,7 +31,7 @@ class Questions {
             this.answers_container.removeChild(this.answers_container.lastChild);
         }        
 
-        console.log("First counter: " + this.counter);
+        // console.log("First counter: " + this.counter);
         
         
         let question = this.questions[this.counter].question;
@@ -60,9 +60,9 @@ class Questions {
                     
                     // this.player_choices[this.counter] = is_correct; 
                     // counter redan +1. sparar val till array i constructor
-                    console.log(is_correct);
+                    // console.log(is_correct);
                     
-                    console.log("sending counter/answer: " + (this.counter - 1) + answer);
+                    // console.log("sending counter/answer: " + (this.counter - 1) + answer);
                     this.parent.handleScore(answer, (this.counter - 1));
                     // sparar val till array i Quiz. index counter redan +1. 
                 })

@@ -58,19 +58,48 @@ class Quiz {
     }
     
     handleScore(score, index) {
-        this.player_answers[index] = score;
-        console.log(this.player_answers);
+        let arr = this.player_answers[index]; // platsen för spelarens svar denna fråga
+        let is_array = Array.isArray(arr);
+        
+        if (arr == null) {
+            arr = score;
+        } else if (arr != score && !arr.includes(score)) {
+            console.log("what to do here..");
+            if (!is_array) { //// is not array, one string value
+                console.log("!is_array"); 
+                arr = [arr, score];
+            } else if (!arr.includes(score)) { //// is array, several string values
+                arr.push(score);
+                console.log("is_array");
+
+            }
+        } else {
+            if (!is_array) {
+                arr = null;
+            }
+            else {
+                let remove_index = arr.indexOf(score);
+                console.log("splice");
+                arr.splice(remove_index, 1);
+            }
+            // console.log("IndexOf: " + arr.indexOf(score));
+        }
+        
+        this.player_answers[index] = arr;
+        console.log(arr);
+        // console.log(this.player_answers);
+
         
         //check if all questions have been answered
         if (index == 9 && this.player_answers.includes(null)) {
             alert("There are questions unanswered still. Please go back and answer.")
         } else if (!this.player_answers.includes(null)) {
             console.log("Finito");
-        } else {
+        }/*  else {
             setTimeout(() => {
                 this.questions.nextQuestion();
             }, 150);
-        }
+        } */
     }
     checkCorrectAnswers() {
 
