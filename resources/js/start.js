@@ -92,7 +92,7 @@ class Start {   //// steg 1 på sidan / håller i spelarens val / skapar Quiz oc
 
         let number = document.createElement("input");
         number.type = "number";
-        number.min = 5;
+        number.min = 1;
         number.max = 10;
         number.placeholder = "Number of questions";
         number.className = "player_info";

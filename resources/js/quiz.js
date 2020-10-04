@@ -16,7 +16,6 @@ class Quiz {
         console.log("New score: " + this.player.score);
     }
     async startQuiz() { 
-        //// quiz api programming
         await fetch("https://quizapi.io/api/v1/questions?apiKey=C8BWSol6V6TUpmrsb7Zz17pdZoQuzcB9enTsztNA&limit=" + this.num_of_questions + "&difficulty=" + this.difficulty + "&tags=" + this.category)
 
         .then(response => response.json())
@@ -29,7 +28,7 @@ class Quiz {
     }
     
     loadButtons() {
-//TODO: nåt sätt att göra detta snyggare ÄNDRA OM SEN
+        //TODO: nåt sätt att göra detta snyggare ÄNDRA OM SEN
         let status_bar = document.getElementById("status_bar");
         let show_number = document.createElement("p");
         show_number.id = "show_number"
@@ -72,18 +71,15 @@ class Quiz {
         }
         
         this.player.current_answers[index] = arr;
-        console.log(arr);
-        console.log("index: " + index);
-        console.log(this.player.current_answers);
 
         //TODO: funkar ej. läs på om async / timeout
         this.is_answered = true; // resets in case prev. answer get unclicked
         //check if all questions have been answered
         for (let answer of this.player.current_answers) {
-                console.log("new check");
+                // console.log("new check");
                 if (answer.includes(null)) {
                 this.is_answered = false;
-                console.log("new check, some null");
+                // console.log("new check, some null");
             }
         }
         //TODO: funkar ej. läs på om async / timeout
@@ -91,7 +87,6 @@ class Quiz {
             console.log("should remove button");
             document.getElementById("main_inner").lastChild.remove();
         }
-        console.log(this.is_answered);
 
         //check if all questions have been answered
         if (index == 9 && !this.is_answered) { // let player know of missing answers if on last question
@@ -110,8 +105,74 @@ class Quiz {
         submit.className = "sumbit_answers";
         document.getElementById("main_inner").appendChild(submit);
         submit.addEventListener("click", (e) => {
-            this.questions.checkCorrect(this.player.current_answers, this.questions.correct_answers); 
+            let result = this.questions.checkCorrect(this.player.current_answers, this.questions.correct_answers); // omotiverad sista parameter.. kolla om nödvändigt kriterie
+            this.questions.removeQuestions();
+            // this.displayScore(score);
+            // console.log(result);
+            this.displayScore(result);
         })
 
     }
+    displayScore(result) {
+        let questions = this.questions.questions;
+        let correct_answers = this.questions.correct_answers; // true false
+        
+        let player_correct_answers = result.correct_answers;
+        let player_incorrects = result.incorrect_answers;
+        let is_corrects = result.is_correct_answers;
+        console.log(player_correct_answers);
+        let main_inner = document.getElementById("main_inner");
+
+        for (let i = 0; i < questions.length; i++) {
+            let show_question = document.createElement("h4");
+            let question = questions[i].question;
+            let section_player_corrects = player_correct_answers[i];
+            let section_player_incorrects = player_incorrects[i];
+            let section_correct_strings = this.questions.answers[i];
+            // let section_correct = correct_answers[i]; //TODO: switch back
+            let section_correct = ["true", "true", "false", "false", "false", "false"];
+            
+
+            question = question.replace(/\</g,"&lt;");
+            show_question.innerHTML = question;
+            main_inner.appendChild(show_question);
+
+            if (is_corrects[i] == true) { // if correctly answered
+                for (let answer of player_correct_answers[i]) {
+                    let show_answer = document.createElement("p");
+                    answer = answer.replace(/\</g,"&lt;");
+                    show_answer.innerHTML = answer;
+                    show_answer.className = "correct";
+                    main_inner.appendChild(show_answer);
+                }
+            } else { // if NOT correctly answered
+                for (let answer of section_player_incorrects) {
+                    let show_answer = document.createElement("p");
+                    let incorr = answer.replace(/\</g,"&lt;");
+                    show_answer.innerHTML = incorr;
+                    show_answer.className = "incorrect";
+                    main_inner.appendChild(show_answer);
+                }
+                for (let j = 0; j < section_correct.length; j++) {
+                    let answer = section_correct_strings[j];
+                    if (section_correct[j] == "true" && !section_player_incorrects.includes(answer)) {
+                        let show_answer = document.createElement("p");
+                        
+                        if (section_player_corrects.includes(answer) || section_player_corrects.includes(answer)) {
+                            show_answer.className = "correct"
+                        } else {
+                            show_answer.className = "not_chosen";
+                        }
+
+                        let regex = answer.replace(/\</g,"&lt;");
+                        show_answer.innerHTML = regex;
+                        main_inner.appendChild(show_answer);
+                    }
+                }
+                
+            }
+        }
+        
+    }
+
 }
