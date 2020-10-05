@@ -11,10 +11,10 @@ class Start {   //// steg 1 på sidan / håller i spelarens val / skapar Quiz oc
     }
     
     newQuiz() {
-        this.quiz = new Quiz(this.input_number, this.input_difficulty, this.input_category, this.input_name);
+        this.quiz = new Quiz(this.input_number, this.input_difficulty, this.input_category, this.input_name, this);
     }
     getPlayerInfo() {
-        let header = document.createElement("h1");
+        let header = document.createElement("H1");
         header.innerHTML = "QUIZ TIME!"
         this.header_container.appendChild(header);
 

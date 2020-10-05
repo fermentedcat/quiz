@@ -45,8 +45,8 @@ class Questions {
         let incorrect_answers = [];
 
         for (let i = 0; i < player_answers.length; i++) { // checking each question section
-            // let corrects_section = correct[i];  // [true, true, false]
-            let corrects_section = ["true", "true", "false", "false"]
+            let corrects_section = correct[i];  // [true, true, false]
+            // let corrects_section = ["true", "true", "false", "false"]
             let correct_filtered = corrects_section.filter(value => value == "true");// [true, true]
             let correct_index = corrects_section.indexOf("true"); // 0
             let section_answers = player_answers[i];
@@ -86,6 +86,7 @@ class Questions {
                 }
                 
             } 
+            console.log(is_correct);
             correct_answers.push(correct_arr);
             is_correct_answers.push(is_correct);
             incorrect_answers.push(incorrect_arr);
@@ -145,6 +146,7 @@ class Questions {
                 
             } 
         }
+        
         this.counter++;
         document.getElementById("show_number").innerHTML = this.counter + " / " + this.questions.length;  //visar vilken fråga man är på
     }

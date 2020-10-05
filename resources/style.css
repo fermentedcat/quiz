@@ -32,18 +32,11 @@ header {
 }
 
 header h1 {
-    color: rgb(209, 216, 228);/*// main bg / h1 */
+    color: rgb(227, 229, 233);/*// main bg / h1 */
     font-size: 2.5rem;
     margin-bottom: 10px;
 }
-h4 {
-    font-size: 1.3em;
-    margin: 0.5em 0;
-}
 
-p {
-    font-size: 0.9em;
-}
 
 .correct,
 .incorrect,
@@ -69,19 +62,20 @@ p {
     justify-content: flex-end;
 }
 main {
-    height: 100vw;
+    margin-bottom: 1.2em;
     width: 100vw;
 }
 
 .main_inner {
     display: flex;
     flex-direction: column;
-    width: 60vw;
+    width: 50vw;
     height: 100%;
     margin: 0 auto;
     font-family: Quicksand, Helvetica, sans-serif;
     font-weight: 300;
     color: rgb(31, 31, 38);/*// main p */
+    padding-bottom: 10em;
 }
 input.player_info {
     text-indent: 0.2em;
@@ -132,10 +126,7 @@ button.submit_button:active {
     background-color: rgb(206, 206, 67);
 }
 
-button.sumbit_answers {
-    position: absolute;
-    bottom: 5em;
-}
+
 
 ul {
     padding: 2em;
@@ -143,13 +134,16 @@ ul {
 
 li {
     list-style-type: disc;
-    list-style-position: inside;
+    /* list-style-position: inside; */
     font-size: 1.3em;
     width: 100%;
     transition: all 0.15s ease-in-out;
-    border-radius: 20em;
+    border-radius: 30px;
     margin: 0.3em;
     padding: 0.7em;
+    box-sizing: border-box;
+    list-style-position: outside;
+    text-indent: 2em;
 }
 li:hover {    
     background-color: rgb(197, 205, 219);/*// main bg / h1 */
@@ -165,13 +159,66 @@ li:active {
 }
 
 
-#status_bar {
-    width: 11em;
-    margin: 0.75em auto;
-    display: flex;
-    
+
+p {
+    font-size: 1em;
+    margin: 1.2em;
+}
+.main_inner div {
+    border-radius: 30px;
+    margin-top: 1em;
+    /* border-right: 1.3em solid transparent; */
+
+}
+div h4,
+div h2 {
+    font-size: 1.3em;
+    /* margin: 0.5em 0; */
+    border-radius: 24px 24px 0 0;
+    /* padding: 0.5em 1em; */
+    /* text-indent: 1em; */
+    /* height: 2em; */
+    width: 100%;
+    /* border-left: 1em solid transparent;
+    border-right: 1em solid transparent; */
+    line-height: 2em;
+    box-sizing: border-box;
+    padding: 0.2em 1em;
+
 }
 
+div.collapsed {
+    background-color: rgb(197, 205, 219);
+}
+div.expanded {
+    background-color: rgb(227, 231, 238);
+}
+div.incorrect.collapsed {
+    background-color: rgb(250, 121, 77);
+}
+
+
+div.incorrect.expanded h4{
+    background-color: rgb(250, 121, 77);
+}
+div.expanded h4{
+    background-color: rgb(197, 205, 219);
+}
+
+div.collapsed > *,
+div.expanded > * {
+    pointer-events: none;
+}
+
+.total {
+    background-color: rgb(209, 216, 228);
+    text-align: center;
+    font-weight: 600;
+}
+h6.total {
+    font-weight: 300;
+    padding-bottom: 1em;
+}
 
 /*//    ICONS     */
 .fa-check-circle,
@@ -179,7 +226,7 @@ li:active {
 .fa-circle-notch,
 .fa-chevron-circle-right,
 .fa-chevron-circle-left {
-    color: rgb(197, 205, 219);
+    color: rgb(227, 229, 233);
     display: block;
     margin: 0 auto;
     align-self: center; 
@@ -196,21 +243,34 @@ li:active {
     color: rgb(206, 206, 67);
 }
 
+#status_bar {
+    width: 14em;
+    margin: 0.75em auto;
+    display: flex;
+    height: fit-content;
+    justify-self: center;
+}
+
 #status_bar p {
     align-self: center;
     font-family: Quicksand;
     font-size: 1.4em;
-    font-weight: 300;
-    color:  rgb(31, 31, 38);
+    font-weight: 600;
+    color:  rgb(227, 229, 233);
 
 }
 
 
 
 footer {
-    height: 3.5em;
+    height: 6em;
     width: 100vw;
-    background-color: rgb(250, 121, 77);
+    background-color: rgb(250, 98, 47);;
     position: fixed;
     bottom: 0px;
+}
+button.sumbit_answers {
+    position: fixed;
+    
+    bottom: 7em;
 }
