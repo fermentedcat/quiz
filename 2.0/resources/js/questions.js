@@ -1,21 +1,25 @@
 class Questions {
     constructor() {
 
-        this.category;                                  //* eller på Quiz
-        this.difficulty;                                //*              
+        this.category;                                  //* TO USE AT DISPLAY
+        this.difficulty;                                //*                  
         this.questions = [];       //  instances of class Question
-        this.correct_answers = []; //  [    [false, true, false, false], [true, false, true]    ]
         this.answers = [];         //  [    ["...", "...", null, null], ["...", "...", null]    ]
+        this.correct_answers = []; //  [    [false, true, false, false], [true, false, true]    ]
 
     }
 
     updateQuestions(fetched_obj) {
+        let questions = [];
+        let answers = [];
+        let correct_answers = [];
+        
         for (let question of fetched_obj) {
-            this.category = question.tags[0];        //* eller på Quiz
-            this.difficulty = question.difficulty;   //*              
+            this.category = question.tags[0];        //* TO USE AT DISPLAY
+            this.difficulty = question.difficulty;   //*                  
 
             //// save Question instances
-            this.questions.push(new Question(question));
+            questions.push(new Question(question));
 
             let correct_arr = []; 
             //// make true/false array of object "correct answers" values 
@@ -26,14 +30,17 @@ class Questions {
                     correct_arr.push(false);
                 }
             });
-            this.correct_answers.push(correct_arr);
+            correct_answers.push(correct_arr);
 
             let answer_arr = []; 
             //// make array of strings of object "answers" values
             Object.values(question.answers).forEach(answer => answer_arr.push(answer));
-            this.answers.push(answer_arr);
+            answers.push(answer_arr);
         }
-        }
+        this.questions = questions;
+        this.answers = answers;
+        this.correct_answers = correct_answers;
+    }
 
     getNextQuestion(index) { 
         let question = this.questions[index].question;
@@ -48,9 +55,7 @@ class Questions {
         return answers;
     }
 
-    checkCorrect(player_answers, correct_answers) { //* var ska denna metod vara?
-
-    }
+    
 
 }
 

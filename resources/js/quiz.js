@@ -86,7 +86,7 @@ class Quiz {
                         this.cleanWindow(true);
                         e.target.remove();
                         this.parent.getPlayerInfo();
-                })
+                    })
                 break;
             default:
         }
@@ -127,10 +127,8 @@ class Quiz {
         this.is_answered = true; // resets in case prev. answer get unclicked
         //check if all questions have been answered
         for (let answer of this.player.current_answers) {
-                // console.log("new check");
                 if (answer.includes(null)) {
                 this.is_answered = false;
-                // console.log("new check, some null");
             }
         }
         //TODO: funkar ej. läs på om async / timeout

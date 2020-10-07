@@ -1,7 +1,7 @@
 class Player {
     constructor() {
         this.name;
-        this.score = 0; //// eller två, right/wrong
+        this.score = 0; // eller två, right/wrong     //! ! not using
         this.current_answers; // indexes of chosen answers
 
     }
@@ -28,23 +28,17 @@ class Player {
         }
         //// update current answers
         this.current_answers[index] = chosen;
-        console.log(this.current_answers);
     }
 
     //* notify if all questions have been answered
     checkIsAnswered() {
         let is_answered = true;
-
-        //check if all questions have been answered
+        ////check inner array if empty or includes null = not answered
         for (let answer of this.current_answers) {
-            // console.log("new check");
-            if (answer.includes(null) || answer < 1) {
-            is_answered = false;
-            // console.log("new check, some null");
+            if (answer.includes(null) || answer.length < 1) {
+                is_answered = false;
             }
         }
-        console.log(is_answered);
-
         return is_answered; 
     }
     
@@ -56,6 +50,5 @@ class Player {
     }
     updateAnswers(answers, index) { //// varje svar
         this.current_answers[index].push(answers);
-        console.log(this.current_answers[index]);
     }
 }

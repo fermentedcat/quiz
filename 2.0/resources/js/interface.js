@@ -1,6 +1,6 @@
 class Interface {
     constructor() {
-        this.header_container = document.getElementById("question_container");
+        this.header_container = document.getElementById("header_container");
         this.header = document.createElement("H1");
         this.header_container.appendChild(this.header);
 
@@ -100,7 +100,7 @@ class Interface {
         //// number of questions
         let number = document.createElement("input");
         number.type = "number";
-        number.min = 5;
+        number.min = 1;
         number.max = 10;
         number.placeholder = "Number of questions";
         number.className = "player_info";
@@ -165,7 +165,7 @@ class Interface {
         while (this.answers_container.firstChild) { // ta bort alla svarsalt från förra frågan
             this.answers_container.removeChild(this.answers_container.lastChild);
         }  
-               
+
         let these_answers = []; //// to use in class Quiz when clicking on answers
         for (let answer of answers) {
             let answer_button = document.createElement("li");
@@ -177,13 +177,7 @@ class Interface {
     }
 
 
-    //* =============== FINAL SCORE ================= *//
-    //// finished quiz score board
-    displayScore(name, score) {
-    this.header.innerHTML = "Good job " + name + "!<br> This is your total score:";
-    
 
-    }
 
 
     //* ================== BUTTONS ================== *//
@@ -227,7 +221,7 @@ class Interface {
                 break;
 
             ////   new quiz     
-            case "new_game":
+            case "new_quiz":
                 this.button = document.createElement("button");
                 document.getElementById("main_inner").appendChild(this.button);
                 this.button.innerHTML = "PLAY AGAIN";
@@ -239,7 +233,126 @@ class Interface {
         }
 
     }
-    removeButton(type) {
+    cleanWindow() {
+        //// remove everything in main
+        while (this.main.firstChild) { 
+            this.main.removeChild(this.main.lastChild);
+        }
+        this.footer.style.display = "none";
 
+        while (this.status_bar.firstChild) { 
+            this.status_bar.removeChild(this.status_bar.lastChild);
+        }
     }
+
+
+    //* =============== FINAL SCORE ================= *//
+    //// finished quiz score board  -  questions & score 
+    displayScore(result, quiz_questions, name) {
+        
+        let total_score = result.total_score;
+        let percent     = result.percent;
+        let questions   = quiz_questions; // array of instances of class question
+        let player_is_corrects = result.player_is_corrects;
+        
+        //// display calculations
+        this.header.innerHTML = "Good job " + name + "!<br> This is your total score:";
+        let total_div = document.createElement("div");
+        let total_text = document.createElement("h2");
+        let percent_text = document.createElement("h6");
+        total_text.innerHTML = total_score + " out of " + questions.length;
+        percent_text.innerHTML = percent + " %";
+        total_text.className = "total";
+        percent_text.className = "total";
+        this.main.appendChild(total_div);
+        total_div.appendChild(total_text);
+        total_div.appendChild(percent_text);
+
+        //// show questions different css if correct or incorrect
+        for (let i = 0; i < questions.length; i++) {
+            let q_div = document.createElement("div");
+            q_div.classList.add("collapsed");
+            if (player_is_corrects[i] == false) {
+                q_div.classList.add("incorrect");
+            }
+            this.main.appendChild(q_div);
+
+            let q_text = document.createElement("h4");
+            let text = questions[i].question.replace(/\</g,"&lt;");
+            q_text.innerHTML = text;
+            q_div.appendChild(q_text);
+        }
+    }
+    //* ================ OPEN / CLOSE for answers ============== *//
+    ////  show answers when click on question when showing result   
+    displayCorrectAnswers(result, quiz_answers, div) { 
+        let siblings          = Array.from(div.parentNode.childNodes); // for index & to remove "P"s
+        let index             = siblings.indexOf(div) - 1;  // use to know what answers to display
+        
+        let player_corrects   = result.player_corrects[index];
+        let player_incorrects = result.player_incorrects[index];
+        let correct_answers   = result.correct_answers[index];
+        let answers           = quiz_answers[index]; // arrays of all answers for each question 
+        
+
+        //// expand or collapse div to contain answers
+        if (div.classList.contains("collapsed")) {
+            for (let i = 0; i < this.main.childNodes.length; i++) { 
+                //// change className on all question divs
+                this.main.childNodes[i].classList.remove("expanded");
+                this.main.childNodes[i].classList.add("collapsed");
+            }
+           
+            //// remove all answers showing
+            for (let i = 0; i < siblings.length; i++) {  
+                while (siblings[i].lastChild.tagName == "P") {
+                    siblings[i].removeChild(siblings[i].lastChild);
+                }   
+            }
+            //// expand the clicked div
+            div.classList.add("expanded");
+            div.classList.remove("collapsed");
+
+    
+    
+            //// display answers 
+            let answer_section   = answers;
+            let quiz_corrects_section = correct_answers;
+
+            for (let j = 0; j < answer_section.length; j++) {
+                if (answer_section[j] != null) {
+                    let p = document.createElement("p");
+                    
+                    //// decide style of each answer
+                    if (quiz_corrects_section[j] == "false") {
+                        p.classList.add("incorrect");
+                    } else {
+                        p.classList.add("correct");
+                    }
+                    //// if -correctly- chosen, remove standard "correct"
+                    if (player_corrects.includes(answer_section[j])) {
+                        p.classList.add("chosen");
+                        p.classList.remove("correct");
+                    //// if chosen incorrectly 
+                    } else if (player_incorrects.includes(answer_section[j])) {
+                        p.classList.add("chosen_incorrect");
+                    }
+
+                    let text = answer_section[j].replace(/\</g,"&lt;");
+                    p.innerHTML = text;
+                    div.appendChild(p);
+                }
+            }
+
+        //// if click on already expanded -> collapse
+        } else {
+            div.classList.remove("expanded");
+            div.classList.add("collapsed");
+           
+            while (div.lastChild.tagName == "P") {
+                div.removeChild(div.lastChild);
+            }   // remove answers showing
+            
+        }        
+    }    
 }
