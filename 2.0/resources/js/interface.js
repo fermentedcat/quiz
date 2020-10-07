@@ -19,11 +19,14 @@ class Interface {
         this.back_btn;
         this.button; // any other current button
 
-    }
 
-    //// form to get player info, category etc
+        this.answers_on_display; // currently displaying answer options
+
+    }
+    //* =================== FORM ==================== *//
     setupForm() {
-        this.header.innerHTML = "QUIZ TIME!"
+        this.header.innerHTML = "QUIZ TIME!";
+        //// form to get player info, category etc
         this.form = document.createElement("form");
         this.main.appendChild(this.form);
 
@@ -34,7 +37,7 @@ class Interface {
         this.form.appendChild(name);
         name.focus();
 
-
+        //// category
         let category = document.createElement("select");
         category.className = "player_info";
         category.required = true;
@@ -64,7 +67,7 @@ class Interface {
         category.appendChild(cat_opt2);
         category.appendChild(cat_opt3);
 
-
+        //// difficulty
         let difficulty = document.createElement("select");
         difficulty.className = "player_info";
         difficulty.required = true;
@@ -94,24 +97,20 @@ class Interface {
         difficulty.appendChild(dif_opt2);
         difficulty.appendChild(dif_opt3);
 
-
+        //// number of questions
         let number = document.createElement("input");
         number.type = "number";
-        number.min = 1;
+        number.min = 5;
         number.max = 10;
         number.placeholder = "Number of questions";
         number.className = "player_info";
         number.required = true;
         this.form.appendChild(number);
 
+        //// sumbit button
+        this.loadButtons("form");
 
-        let submit = document.createElement("button");
-        submit.className = "submit_button"
-        submit.innerHTML = "START QUIZ";
-        submit.type = "submit"
-
-        this.form.appendChild(submit);
-
+        //// change difficulty if JavaScript is chosen
         category.addEventListener("change", e => {
             if (category.value == "JavaScript") {
                 dif_opt1.selected = true;
@@ -123,8 +122,7 @@ class Interface {
                 dif_options.forEach(option => {
                     option.disabled = false;
                 });
-            }
-        })
+            }});
 
         //// if - annars tomma fält (inga placeholders/"förval")
         if (localStorage.getItem("name")) {
@@ -146,33 +144,40 @@ class Interface {
             difficulty,
             number
         }
-    }
+    } //// end of form 
 
-    removeForm() {
-
-    } //// end of form
-
-    
-    
+    //* ============= QUESTION DISPLAY ============== *//
     setupAnswers() {
+        this.form.remove();
+        //// set up list in main for answers
         this.answers_container = document.createElement("ul");
         this.answers_container.className = "list";
         this.main.appendChild(this.answers_container);
     }
-
     //// display question in quiz
-    displayQuestion(question) {
+    displayQuestion(question, index, quiz_length) {
         this.header.innerHTML = question;
+        this.current_q_number.innerHTML = (index + 1) + " / " + quiz_length;
     }
     //// display answers in quiz
-    displayAnswers(answers) {  // contains one set of answers (for one question)
+    displayAnswers(answers) {  // contains one set of answers (for one question)        
+        //// clean up ul
+        while (this.answers_container.firstChild) { // ta bort alla svarsalt från förra frågan
+            this.answers_container.removeChild(this.answers_container.lastChild);
+        }  
+               
+        let these_answers = []; //// to use in class Quiz when clicking on answers
         for (let answer of answers) {
             let answer_button = document.createElement("li");
+            answer_button.innerHTML = answer;
+            this.answers_container.appendChild(answer_button);
+            these_answers.push(answer_button);
         }
+        this.answers_on_display = these_answers;
     }
 
 
-
+    //* =============== FINAL SCORE ================= *//
     //// finished quiz score board
     displayScore(name, score) {
     this.header.innerHTML = "Good job " + name + "!<br> This is your total score:";
@@ -180,10 +185,21 @@ class Interface {
 
     }
 
-    //// start quiz --- back/forward --- submit answers --- new quiz 
+
+    //* ================== BUTTONS ================== *//
     loadButtons(type) {
         switch (type) {
-            case "next":
+            ////   send form    
+            case "form":
+                this.button = document.createElement("button");
+                this.button.className = "submit_button"
+                this.button.innerHTML = "START QUIZ";
+                this.button.type = "submit"
+                this.form.appendChild(this.button);
+                break;
+
+            ////  back/forward  
+            case "next": 
                 this.status_bar = document.getElementById("status_bar");
                 this.footer.style.display = ""; //* useful??
 
@@ -200,24 +216,26 @@ class Interface {
                 this.fwd_btn = document.createElement("i");
                 this.fwd_btn.className = "fas fa-chevron-circle-right fa-3x";
                 this.status_bar.appendChild(this.fwd_btn);
-
                 break;
+
+            //// submit answers 
             case "submit":
-                this.button = document.createElement("this.button");
+                this.button = document.createElement("button");
                 document.getElementById("main_inner").appendChild(this.button);
                 this.button.innerHTML = "SUBMIT ANSWERS";
                 this.button.className = "sumbit_answers";
-                
                 break;
+
+            ////   new quiz     
             case "new_game":
-                this.button = document.createElement("this.button");
+                this.button = document.createElement("button");
                 document.getElementById("main_inner").appendChild(this.button);
                 this.button.innerHTML = "PLAY AGAIN";
-                this.button.className = "submit_this.button play_again";
-
+                this.button.className = "submit_button play_again";
                 break;
+
             default:
-                console.log("no button type declared");
+                console.log("no button type specified");
         }
 
     }
