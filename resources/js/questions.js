@@ -28,9 +28,9 @@ class Questions {
         this.is_chosen = new Array(fetched_obj.length); // vilka val som gjorts
         
         
-        let q_container = document.getElementById("question_container");
-        this.currentQuestion = document.createElement("h1");
-        q_container.appendChild(this.currentQuestion);
+        // let q_container = document.getElementById("question_container");
+        this.currentQuestion = parent.header;
+        // q_container.appendChild(this.currentQuestion);
         
         let main = document.getElementById("main_inner");
         this.answers_container = document.createElement("ul");

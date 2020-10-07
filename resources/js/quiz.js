@@ -8,6 +8,11 @@ class Quiz {
         // this.player_answers = new Array(this.num_of_questions).fill([null]); // spelarens svar sparas här
         this.is_answered = false;
         this.parent = parent;
+        this.main_inner = document.getElementById("main_inner");
+        this.header = document.getElementsByTagName("H1")[0];
+        this.footer = document.querySelector("FOOTER");
+
+        // console.log(this.header);
         
         
         this.startQuiz();
@@ -23,39 +28,83 @@ class Quiz {
         .then(data => {
             this.questions = new Questions(data, this); //// send random questions to Questions to start
             // this.answers = new Answers(this.fetched_questions, this);
-            this.loadButtons();
+            this.loadButtons("next");
+            this.footer.style.display = "";
+            this.questions.nextQuestion();
         });
         
     }
-    
-    loadButtons() {
-        //TODO: nåt sätt att göra detta snyggare ÄNDRA OM SEN
-        let status_bar = document.getElementById("status_bar");
-        let show_number = document.createElement("p");
-        show_number.id = "show_number"
-        
-        let back_button = document.createElement("i");
-        back_button.className = "fas fa-chevron-circle-left fa-3x";
-        status_bar.appendChild(back_button);
-        back_button.addEventListener("click", e => {
-            if (this.questions.counter > 1 ) {
-                this.questions.nextQuestion(2); // index counter -2 (är redan inställd på nästa fråga) 
+
+    loadButtons(type) {
+        switch (type) {
+            case "next":
+                let status_bar = document.getElementById("status_bar");
+                
+                //// go to previous question
+                let back_button = document.createElement("i");
+                back_button.className = "fas fa-chevron-circle-left fa-3x";
+                status_bar.appendChild(back_button);
+                back_button.addEventListener("click", e => {
+                    if (this.questions.counter > 1 ) {
+                        this.questions.nextQuestion(2); 
+                    }   // index counter -2 (är redan inställd på nästa fråga) 
+                })
+                //// show question number
+                let show_number = document.createElement("p"); 
+                show_number.id = "show_number";
+                status_bar.appendChild(show_number);
+
+                //// go to next question
+                let fwd_button = document.createElement("i");
+                fwd_button.className = "fas fa-chevron-circle-right fa-3x";
+                status_bar.appendChild(fwd_button);
+                fwd_button.addEventListener("click", e => {
+                    if (this.questions.counter < this.num_of_questions) {
+                        this.questions.nextQuestion(); 
+                    }
+                })
+                break;
+            case "submit":
+                let button = document.createElement("button");
+                document.getElementById("main_inner").appendChild(button);
+                button.innerHTML = "SUBMIT ANSWERS";
+                button.className = "sumbit_answers";
+                button.addEventListener("click", (e) => {
+                    let result = this.questions.checkCorrect(this.player.current_answers, this.questions.correct_answers); // omotiverad sista parameter.. kolla om nödvändigt kriterie
+                    this.cleanWindow(false);
+                    this.displayScore(result);
+                    this.footer.style.display = "none";
+                    e.target.remove();
+                })
+                break;
+                case "new_game":
+                    let restart_button = document.createElement("button");
+                    document.getElementById("main_inner").appendChild(restart_button);
+                    restart_button.innerHTML = "PLAY AGAIN";
+                    restart_button.className = "submit_button play_again";
+                    restart_button.addEventListener("click", (e) => {
+                        this.cleanWindow(true);
+                        e.target.remove();
+                        this.parent.getPlayerInfo();
+                })
+                break;
+            default:
+        }
+    }
+    cleanWindow(all) {
+        //// remove everything in main
+        while (this.main_inner.firstChild) { 
+            this.main_inner.removeChild(this.main_inner.lastChild);
+        }
+        if (all == true) {
+            this.footer.style.display = "";
+            let status_bar = document.getElementById("status_bar");
+
+            while (status_bar.firstChild) { 
+                status_bar.removeChild(status_bar.lastChild);
             }
-        })
-
-        status_bar.appendChild(show_number);
-
-        let button = document.createElement("i");
-        button.className = "fas fa-chevron-circle-right fa-3x";
-        status_bar.appendChild(button);
-        button.addEventListener("click", e => {
-            if (this.questions.counter < this.num_of_questions) {
-                this.questions.nextQuestion(); 
-            }
-        })
-        document.getElementsByTagName("FOOTER")[0].style.display = "";
-
-        this.questions.nextQuestion();
+            this.header.remove();
+        }
     }
     
     handleScore(score, index) {
@@ -89,31 +138,16 @@ class Quiz {
             console.log("should remove button");
             document.getElementById("main_inner").lastChild.remove();
         }
-
+        //TODO: funkar inte...
         //check if all questions have been answered
-        if (index == 9 && !this.is_answered) { // let player know of missing answers if on last question
+        if (index == (this.num_of_questions.length - 1) && !this.is_answered) { // let player know of missing answers if on last question
             alert("There are questions unanswered still. Please go back and answer.")
         } else if (this.is_answered) {
-            console.log("Finito");
-            this.loadSubmitButton();
+            this.loadButtons("submit");
         }
     }
-    loadSubmitButton() {
-        /* if (document.getElementById("main_inner").lastChild.tagName == "BUTTON") {
-            document.getElementById("main_inner").lastChild.remove();
-        } */
-        let submit = document.createElement("button");
-        submit.innerHTML = "SUBMIT ANSWERS";
-        submit.className = "sumbit_answers";
-        document.getElementById("main_inner").appendChild(submit);
-        submit.addEventListener("click", (e) => {
-            let result = this.questions.checkCorrect(this.player.current_answers, this.questions.correct_answers); // omotiverad sista parameter.. kolla om nödvändigt kriterie
-            // this.displayScore(score);
-            // console.log(result);
-            this.displayScore(result);
-        })
 
-    }
+    
     displayScore(result) {
         let questions = this.questions.questions;
         let answers = this.questions.answers;
@@ -126,15 +160,11 @@ class Quiz {
         let total_score = is_corrects.filter(val => val == true).length;
         let percent = Math.round(((100 * total_score) / questions.length) * 10) / 10;
         
-        let main_inner = document.getElementById("main_inner");
-
-        //// remove everything in main
-        while (main_inner.firstChild) { 
-            main_inner.removeChild(main_inner.lastChild);
-        }
+        
         //// remove footer and replace header
-        document.getElementsByTagName("H1")[0].innerHTML = "Good job " + this.player.name + "!<br> This is your total score:";
-        document.getElementsByTagName("FOOTER")[0].style.display = "none";
+        
+        this.header.innerHTML = "Good job " + this.player.name + "!<br> This is your total score:";
+        // document.getElementsByTagName("FOOTER")[0].style.display = "none";
 
         let total_div = document.createElement("div");
         let total_text = document.createElement("h2");
@@ -143,7 +173,7 @@ class Quiz {
         percent_text.innerHTML = percent + " %";
         total_text.className = "total";
         percent_text.className = "total";
-        main_inner.appendChild(total_div);
+        this.main_inner.appendChild(total_div);
         total_div.appendChild(total_text);
         total_div.appendChild(percent_text);
 
@@ -155,7 +185,7 @@ class Quiz {
             if (is_corrects[i] == false) {
                 q_div.classList.add("incorrect");
             }
-            main_inner.appendChild(q_div);
+            this.main_inner.appendChild(q_div);
 
             let q_text = document.createElement("h4");
             let text = questions[i].question.replace(/\</g,"&lt;");
@@ -167,12 +197,13 @@ class Quiz {
             //// Click on question to see mistakes etc
             q_div.addEventListener("click", function(e) {
                 if (this.classList.contains("collapsed")) {
+                    let main_inner = document.getElementById("main_inner");
+
                     for (let i = 0; i < main_inner.childNodes.length; i++) { 
                         //// change className on all question divs
                         main_inner.childNodes[i].classList.remove("expanded");
                         main_inner.childNodes[i].classList.add("collapsed");
                     }
-                    console.log(main_inner.childNodes);
                     let main_children = this.parentNode.childNodes;
                     
 
@@ -184,13 +215,30 @@ class Quiz {
                     }
                     this.classList.add("expanded");
                     this.classList.remove("collapsed");
+                    console.log("correct_answers[i]");
+                    console.log(correct_answers[i]);
+
 
                     ////show answers
                     let answer_section = answers[i];
-                    for (let answer of answer_section) {
-                        if (answer != null) {
+                    let corrects_section = correct_answers[i];
+                    for (let k = 0; k < answer_section.length; k++) {
+                        if (answer_section[k] != null) {
                             let p = document.createElement("p");
-                            let text = answer.replace(/\</g,"&lt;");
+
+                            if (corrects_section[k] == "false") {
+                                p.classList.add("incorrect");
+                            } else {
+                                p.classList.add("correct");
+                            }
+
+                            if (player_correct_answers[i].includes(answer_section[k])) {
+                                p.classList.add("chosen");
+                                p.classList.remove("correct");
+                            } else if (player_incorrects[i].includes(answer_section[k])) {
+                                p.classList.add("chosen_incorrect");
+                            }
+                            let text = answer_section[k].replace(/\</g,"&lt;");
                             p.innerHTML = text;
                             this.appendChild(p);
                         }
@@ -207,6 +255,7 @@ class Quiz {
 
             })
         }
+        this.loadButtons("new_game")
         // this.parent.getPlayerInfo(); //* start new game
 
         

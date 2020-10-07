@@ -17,10 +17,8 @@ class Start {   //// steg 1 på sidan / håller i spelarens val / skapar Quiz oc
         let header = document.createElement("H1");
         header.innerHTML = "QUIZ TIME!"
         this.header_container.appendChild(header);
-
         let form = document.createElement("form");
         this.main_inner.appendChild(form);
-        
 
         let name = document.createElement("input");
         name.className = "player_info";
@@ -149,11 +147,10 @@ class Start {   //// steg 1 på sidan / håller i spelarens val / skapar Quiz oc
                 localStorage.setItem("number", number.value);
                 localStorage.setItem("difficulty", difficulty.value);
                 localStorage.setItem("category", category.value);
-                console.log(form);
                 while(this.main_inner.firstChild) {
-                    this.main_inner.lastChild.remove();
+                    this.main_inner.removeChild(this.main_inner.lastChild);
                 }
-                header.remove();
+                // header.remove();
                 this.newQuiz();
             }
             else {
