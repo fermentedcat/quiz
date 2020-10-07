@@ -19,10 +19,7 @@ class Questions {
 
         this.counter = 0; //// keeps track of which question to show
         this.parent = parent; // instance of class Quiz  //* behövs deklaration?
-        this.answer_paths = ["answer_a", "answer_b", "answer_c", "answer_d", "answer_e", "answer_f"];
-        this.is_correct_paths = this.answer_paths.map(function(path) {
-            return path + "_correct";
-        })
+        
         this.player_choices = new Array(fetched_obj.length).fill(false); // rätt/fel svar sparas
         
         this.is_chosen = new Array(fetched_obj.length); // vilka val som gjorts
