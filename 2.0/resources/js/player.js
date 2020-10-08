@@ -1,12 +1,22 @@
 class Player {
     constructor() {
         this.name;
-        this.score = 0; // eller två, right/wrong     //! ! not using
+        this.score = 0; 
+        this.all_time_score = 0;
+        this.percent_average = 0;
+        this.times_played = 0;
         this.current_answers; // indexes of chosen answers
 
     }
     updatePlayer(name, num_of_questions) { ////varje nytt spel
-        this.name = name;
+        if (this.name != name) {    
+            this.name = name;   
+            this.percent = 0;
+            this.times_played = 1; //// if new player
+        } else {
+            this.times_played++;
+        }
+        this.score = 0;   
         this.current_answers = new Array(num_of_questions).fill([null]);
     }
 
@@ -44,11 +54,18 @@ class Player {
     
 
 
-    //! not using yet
+    //* UPDATE SCORE
     updateScore(point) { //// varje svar
-        this.score += point;
+        this.score = point;
+        this.updateAllTimeScore();
     }
-    updateAnswers(answers, index) { //// varje svar
-        this.current_answers[index].push(answers);
+
+    updateAllTimeScore() {
+        this.all_time_score = Math.max(this.all_time_score, this.score);
+    }
+
+    //* UPDATE AVERAGE PERCENT
+    updatePercent(percent) { //// varje svar
+        this.percent_average = (this.percent_average + percent) /  this.times_played;
     }
 }

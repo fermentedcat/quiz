@@ -17,15 +17,19 @@ class Quiz {
 
     //* START QUIZ called from submit form
     startQuiz(info) {
+        //// update player info
         this.quiz_length = info.quiz_length;
         this.player.updatePlayer(info.name, info.quiz_length);
         
+        //// get questions from api
         this.getQuestions(info.quiz_length, info.difficulty, info.category);
         
+        //// load footer buttons
         this.interface.loadButtons("next");
         this.interfaceEvents(this.interface.fwd_btn, "fwd");
         this.interfaceEvents(this.interface.back_btn, "back");
 
+        //// remove existing form & setup answers container
         this.interface.setupAnswers();
     }
 
@@ -53,10 +57,7 @@ class Quiz {
         this.interfaceEvents(this.interface.answers_on_display, "li"); 
     }
 
-
-
-
-
+    //* eventListeners
     interfaceEvents(element, type) {
         switch (type) {
             //// back & forward buttons
@@ -149,6 +150,40 @@ class Quiz {
         }
     }
 
+    //* submit form eventListener
+    playerInfoSubmitEvent(content) {
+        let form = this.interface.form;
+        let name = content.name;
+        let category = content.category;
+        let difficulty = content.difficulty;
+        let number = content.number;
+        
+        form.onsubmit = (e) => {
+            e.preventDefault();
+            //// check that name is not only spaces 
+            let trimmed = name.value.trim();
+            if (trimmed.length > 0) { 
+                let info = {
+                    name: name.value,
+                    quiz_length: Number(number.value),
+                    difficulty: difficulty.value,
+                    category: category.value
+                };
+
+                //// store values 
+                localStorage.setItem("name", name.value);
+                localStorage.setItem("number", number.value);
+                localStorage.setItem("difficulty", difficulty.value);
+                localStorage.setItem("category", category.value);
+
+                this.startQuiz(info); //// START QUIZ 
+            } else {
+                alert("Please enter your name.")
+            }
+        }
+    }
+
+
     //* ====== CHECK FINAL SCORE RESULTS ======= */
     checkCorrect(player_chosen, quiz_corrects) {
         let player_is_corrects = [];   // send in booleans
@@ -216,14 +251,18 @@ class Quiz {
 
         }
 
-
         //// calculate percentage of correctly answered
         let total_score = player_is_corrects.filter(val => val == true).length;
         let percent = Math.round(((100 * total_score) / this.questions.questions.length) * 10) / 10;
-                
+        this.player.updateScore(total_score);
+        this.player.updatePercent(percent);
+
         return {
             total_score,
             percent,
+            times_played: this.player.times_played,
+            all_time_score: this.player.all_time_score,
+            percent_average: this.player.percent_average,
             player_corrects,
             player_incorrects,
             player_is_corrects,
@@ -233,38 +272,6 @@ class Quiz {
     }//* end of checkCorrect
     
 
-    //* submit form event
-    playerInfoSubmitEvent(content) {
-        let form = this.interface.form;
-        let name = content.name;
-        let category = content.category;
-        let difficulty = content.difficulty;
-        let number = content.number;
-        
-        form.onsubmit = (e) => {
-            e.preventDefault();
-            //// check that name is not only spaces 
-            let trimmed = name.value.trim();
-            if (trimmed.length > 0) { 
-                let info = {
-                    name: name.value,
-                    quiz_length: Number(number.value),
-                    difficulty: difficulty.value,
-                    category: category.value
-                };
-
-                //// store values 
-                localStorage.setItem("name", name.value);
-                localStorage.setItem("number", number.value);
-                localStorage.setItem("difficulty", difficulty.value);
-                localStorage.setItem("category", category.value);
-
-                this.startQuiz(info); //// START QUIZ 
-            } else {
-                alert("Please enter your name.")
-            }
-        }
-    }
 
     
 }

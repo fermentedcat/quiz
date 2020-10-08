@@ -254,9 +254,9 @@ class Interface {
         
         //// display calculations
         this.header.innerHTML = "Good job " + name + "!<br> This is your total score:";
-        let total_div = document.createElement("div");
+        let total_div  = document.createElement("div");
         let total_text = document.createElement("h2");
-        let quiz_type = document.createElement("h6");
+        let quiz_type  = document.createElement("h6");
 
         total_text.innerHTML = total_score + " / " + questions.length;
         quiz_type.innerHTML = percent + " %  – " + category + " at " + difficulty.toLowerCase() + " level.";
@@ -266,6 +266,15 @@ class Interface {
         this.main.appendChild(total_div);
         total_div.appendChild(total_text);
         total_div.appendChild(quiz_type);
+
+        //// if played more than once, display average % and high score
+        if (result.times_played > 1) {
+            let highscore  = document.createElement("h6");
+            highscore.innerHTML = "Average percent: " + result.percent_average + "%, All time high score: " + result.all_time_score;
+            highscore.className = "total";
+            total_div.appendChild(highscore);
+
+        }
 
         //// show questions different css if correct or incorrect
         for (let i = 0; i < questions.length; i++) {
