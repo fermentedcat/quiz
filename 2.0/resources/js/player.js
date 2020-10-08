@@ -44,7 +44,7 @@ class Player {
     
 
 
-    // not using yet
+    //! not using yet
     updateScore(point) { //// varje svar
         this.score += point;
     }

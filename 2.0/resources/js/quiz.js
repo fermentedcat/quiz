@@ -79,13 +79,14 @@ class Quiz {
             //// Answer options
             case "li":
                 let index = this.current_index - 1;
-                for (let i = 0; i < element.length; i++) {//! save what to player.current answers?
+                for (let i = 0; i < element.length; i++) {
                     if (this.player.current_answers[index].includes(i)) { 
                         element[i].className = "chosen"; //// change styling of already chosen
                     }
                     element[i].addEventListener("click", event => {
                         event.target.classList.toggle("chosen");
-                        this.player.handleAnswers(index, i);
+                        this.player.handleAnswers(index, i); 
+                        // current index + index of the chosen answer
 
                         let is_answered = this.player.checkIsAnswered();
 
@@ -95,7 +96,7 @@ class Quiz {
                         } else if (is_answered) {
                             this.interface.loadButtons("submit");
                             this.interfaceEvents(this.interface.button, "submit");
-                        }
+                        }   // if all questions are answered - button to submit answers
                     });
                 }
                 break;
@@ -103,17 +104,21 @@ class Quiz {
             case "submit":
                 element.addEventListener("click", event => {
 
-                    if (this.player.checkIsAnswered()) {
-                        let result = this.checkCorrect(this.player.current_answers, this.questions.correct_answers);
+                    if (this.player.checkIsAnswered()) { // check just in case chosen gets unchosen
                         this.interface.cleanWindow();
-                        this.interface.displayScore(result, this.questions.questions, this.player.name);
+                        event.target.remove();
+
+                        let result = this.checkCorrect(this.player.current_answers, this.questions.correct_answers);
+                        this.interface.displayScore(result, this.player.name);
+
+                        //// click event on all displaying questions on final score display
                         let main_children = document.getElementById("main_inner").childNodes;
-                        for (let i = 1; i < main_children.length; i++) {
+                        for (let i = 1; i < main_children.length; i++) { // (index 0 =the top score)
                             this.interfaceEvents(main_children[i], "check");
-                        }
+                        } 
+
                         this.interface.loadButtons("new_quiz");
                         this.interfaceEvents(this.interface.button, "new_quiz");
-                        event.target.remove();
                     }
                 });
 
@@ -122,7 +127,7 @@ class Quiz {
             case "check":
                 element.addEventListener("click", event => {
                     let result = this.checkCorrect(this.player.current_answers, this.questions.correct_answers);
-                    this.interface.displayCorrectAnswers(result, this.questions.answers, event.target);
+                    this.interface.displayCorrectAnswers(result, event.target);
                 });
                 break;
             //// Start new quiz
@@ -150,6 +155,7 @@ class Quiz {
         let player_corrects    = [];   // correctly answered strings
         let player_incorrects  = [];   // incorrectly answered strings
         let correct_answers    = quiz_corrects;
+        let questions          = this.questions;
 
         //// checking each section (each question) 
         for (let i = 0; i < player_chosen.length; i++) { 
@@ -221,7 +227,8 @@ class Quiz {
             player_corrects,
             player_incorrects,
             player_is_corrects,
-            correct_answers
+            correct_answers,
+            questions
         }
     }//* end of checkCorrect
     

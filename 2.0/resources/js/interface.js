@@ -3,26 +3,22 @@ class Interface {
         this.header_container = document.getElementById("header_container");
         this.header = document.createElement("H1");
         this.header_container.appendChild(this.header);
-
+        
         this.main = document.getElementById("main_inner");
-        this.answers_container;
-
+        this.answers_container; // to put answer "ul" into
         this.footer = document.querySelector("FOOTER");
-
+        
         this.form;
-        this.answers;
-        this.scoreBoard;
-
-        this.status_bar;
+        
+        this.status_bar;  // for back/fwd btns & current question number
         this.current_q_number;
         this.fwd_btn;
         this.back_btn;
         this.button; // any other current button
-
-
-        this.answers_on_display; // currently displaying answer options
-
+        
+        this.answers_on_display; // current answer options on display
     }
+
     //* =================== FORM ==================== *//
     setupForm() {
         this.header.innerHTML = "QUIZ TIME!";
@@ -100,7 +96,7 @@ class Interface {
         //// number of questions
         let number = document.createElement("input");
         number.type = "number";
-        number.min = 1;
+        number.min = 5;
         number.max = 10;
         number.placeholder = "Number of questions";
         number.className = "player_info";
@@ -177,9 +173,6 @@ class Interface {
     }
 
 
-
-
-
     //* ================== BUTTONS ================== *//
     loadButtons(type) {
         switch (type) {
@@ -233,6 +226,7 @@ class Interface {
         }
 
     }
+    //* =============== CLEAN WINDOW ================= *//
     cleanWindow() {
         //// remove everything in main
         while (this.main.firstChild) { 
@@ -248,25 +242,30 @@ class Interface {
 
     //* =============== FINAL SCORE ================= *//
     //// finished quiz score board  -  questions & score 
-    displayScore(result, quiz_questions, name) {
+    displayScore(result, name) {
         
         let total_score = result.total_score;
         let percent     = result.percent;
-        let questions   = quiz_questions; // array of instances of class question
+        let questions   = result.questions.questions; // array of instances of class question
         let player_is_corrects = result.player_is_corrects;
+        let category    = result.questions.category.name;
+        let difficulty  = result.questions.difficulty;
+        console.log(result.questions);
         
         //// display calculations
         this.header.innerHTML = "Good job " + name + "!<br> This is your total score:";
         let total_div = document.createElement("div");
         let total_text = document.createElement("h2");
-        let percent_text = document.createElement("h6");
-        total_text.innerHTML = total_score + " out of " + questions.length;
-        percent_text.innerHTML = percent + " %";
+        let quiz_type = document.createElement("h6");
+
+        total_text.innerHTML = total_score + " / " + questions.length;
+        quiz_type.innerHTML = percent + " %  – " + category + " at " + difficulty.toLowerCase() + " level.";
+
         total_text.className = "total";
-        percent_text.className = "total";
+        quiz_type.className = "total";
         this.main.appendChild(total_div);
         total_div.appendChild(total_text);
-        total_div.appendChild(percent_text);
+        total_div.appendChild(quiz_type);
 
         //// show questions different css if correct or incorrect
         for (let i = 0; i < questions.length; i++) {
@@ -285,14 +284,14 @@ class Interface {
     }
     //* ================ OPEN / CLOSE for answers ============== *//
     ////  show answers when click on question when showing result   
-    displayCorrectAnswers(result, quiz_answers, div) { 
+    displayCorrectAnswers(result, div) { 
         let siblings          = Array.from(div.parentNode.childNodes); // for index & to remove "P"s
         let index             = siblings.indexOf(div) - 1;  // use to know what answers to display
         
         let player_corrects   = result.player_corrects[index];
         let player_incorrects = result.player_incorrects[index];
         let correct_answers   = result.correct_answers[index];
-        let answers           = quiz_answers[index]; // arrays of all answers for each question 
+        let answers           = result.questions.answers[index]; // arrays of all answers for each question 
         
 
         //// expand or collapse div to contain answers
@@ -324,22 +323,27 @@ class Interface {
                     let p = document.createElement("p");
                     
                     //// decide style of each answer
-                    if (quiz_corrects_section[j] == "false") {
-                        p.classList.add("incorrect");
+                    if (quiz_corrects_section[j] == true) {
+                        p.classList.add("correct"); // quiz incorrect answer
                     } else {
-                        p.classList.add("correct");
+                        p.classList.add("incorrect"); // quiz correct answer
                     }
                     //// if -correctly- chosen, remove standard "correct"
                     if (player_corrects.includes(answer_section[j])) {
-                        p.classList.add("chosen");
+                        p.classList.add("chosen_correct");
                         p.classList.remove("correct");
-                    //// if chosen incorrectly 
+                    //// if chosen incorrectly, remove standard "incorrect"
                     } else if (player_incorrects.includes(answer_section[j])) {
                         p.classList.add("chosen_incorrect");
+                        p.classList.remove("incorrect");
                     }
 
                     let text = answer_section[j].replace(/\</g,"&lt;");
-                    p.innerHTML = text;
+                    if (p.classList.contains("correct") || p.classList.contains("chosen_correct")) {
+                        p.innerHTML = "• " + text;
+                    } else {
+                        p.innerHTML = text;
+                    }
                     div.appendChild(p);
                 }
             }

@@ -9,6 +9,7 @@ class Questions {
 
     }
 
+    //* ========== UPDATE ON QUIZ START ========= *//
     updateQuestions(fetched_obj) {
         let questions = [];
         let answers = [];
@@ -42,21 +43,20 @@ class Questions {
         this.correct_answers = correct_answers;
     }
 
+    //* =========== GET NEXT QUESTION =========== *//
     getNextQuestion(index) { 
         let question = this.questions[index].question;
         question = question.replace(/\</g,"&lt;");
         return question;
     }
 
+    //* =========== GET NEXT ANSWERS ============ *//
     getNextAnswers(index) {
         let answers = this.answers[index];
         answers = answers.filter(answer => answer != null);
         answers = answers.map(answer => answer.replace(/\</g,"&lt;"));
         return answers;
     }
-
-    
-
 }
 
 
