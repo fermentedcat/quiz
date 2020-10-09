@@ -2,9 +2,6 @@ document.addEventListener("DOMContentLoaded", function(e) {
     new Quiz();
 });
 
-//* *//
-
-
 class Quiz {
     constructor() {
         this.questions = new Questions();

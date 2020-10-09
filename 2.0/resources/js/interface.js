@@ -248,7 +248,6 @@ class Interface {
         let player_is_corrects = result.player_is_corrects; // correctly answered - true/false
         let category    = result.questions.category.name;
         let difficulty  = result.questions.difficulty;
-        console.log(player_is_corrects);
         
         //// display calculations
         this.header.innerHTML = "Good job " + name + "!<br> This is your total score:";
