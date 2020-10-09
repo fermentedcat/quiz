@@ -8,6 +8,7 @@ class Player {
         this.current_answers; // indexes of chosen answers
 
     }
+    //* update player every round
     updatePlayer(name, num_of_questions) { ////varje nytt spel
         if (this.name != name) {    
             this.name = name;   
@@ -22,7 +23,7 @@ class Player {
 
     //* save answers on click event (class Quiz)
     handleAnswers(index, option) { // option = index of answer option
-        let chosen = this.current_answers[index];
+        let chosen = this.current_answers[index]; // array of answers currently chosen
         
         //// if nothing has been added - add chosen
         if (chosen.includes(null)) { 
@@ -40,7 +41,7 @@ class Player {
         this.current_answers[index] = chosen;
     }
 
-    //* notify if all questions have been answered
+    //* check if all questions have been answered
     checkIsAnswered() {
         let is_answered = true;
         ////check inner array if empty or includes null = not answered

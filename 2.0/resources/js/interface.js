@@ -16,7 +16,7 @@ class Interface {
         this.back_btn;
         this.button; // any other current button
         
-        this.answers_on_display; // current answer options on display
+        this.answers_on_display; //// current answer options on display
     }
 
     //* =================== FORM ==================== *//
@@ -134,7 +134,7 @@ class Interface {
             category.value = localStorage.getItem("category");
         }
 
-        return {
+        return { // "form_content"
             name,
             category,
             difficulty,
@@ -158,7 +158,7 @@ class Interface {
     //// display answers in quiz
     displayAnswers(answers) {  // contains one set of answers (for one question)        
         //// clean up ul
-        while (this.answers_container.firstChild) { // ta bort alla svarsalt från förra frågan
+        while (this.answers_container.firstChild) { // remove all answer options from prev question
             this.answers_container.removeChild(this.answers_container.lastChild);
         }  
 
@@ -171,7 +171,6 @@ class Interface {
         }
         this.answers_on_display = these_answers;
     }
-
 
     //* ================== BUTTONS ================== *//
     loadButtons(type) {
@@ -239,7 +238,6 @@ class Interface {
         }
     }
 
-
     //* =============== FINAL SCORE ================= *//
     //// finished quiz score board  -  questions & score 
     displayScore(result, name) {
@@ -247,10 +245,10 @@ class Interface {
         let total_score = result.total_score;
         let percent     = result.percent;
         let questions   = result.questions.questions; // array of instances of class question
-        let player_is_corrects = result.player_is_corrects;
+        let player_is_corrects = result.player_is_corrects; // correctly answered - true/false
         let category    = result.questions.category.name;
         let difficulty  = result.questions.difficulty;
-        console.log(result.questions);
+        console.log(player_is_corrects);
         
         //// display calculations
         this.header.innerHTML = "Good job " + name + "!<br> This is your total score:";

@@ -38,6 +38,7 @@ class Questions {
             Object.values(question.answers).forEach(answer => answer_arr.push(answer));
             answers.push(answer_arr);
         }
+        
         this.questions = questions;
         this.answers = answers;
         this.correct_answers = correct_answers;

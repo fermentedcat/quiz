@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", function(e) {
     new Quiz();
 });
 
+//* *//
+
+
 class Quiz {
     constructor() {
         this.questions = new Questions();
@@ -9,13 +12,14 @@ class Quiz {
         this.interface = new Interface();
 
         this.quiz_length;
-        this.current_index = 0; // what question should be displayed next
+        this.current_index = 0; //// what question should be displayed next
 
         let form_content = this.interface.setupForm();
         this.playerInfoSubmitEvent(form_content); //// listen for submit form
     }
 
-    //* START QUIZ called from submit form
+    //* =============== START QUIZ =============== *//
+    ////         called from submit form          ////
     startQuiz(info) {
         //// update player info
         this.quiz_length = info.quiz_length;
@@ -33,7 +37,8 @@ class Quiz {
         this.interface.setupAnswers();
     }
 
-    //* fetch new questions
+    //* ========== fetch new questions =========== *//
+    ////         called from start quiz           ////
     async getQuestions(number, difficulty, category) {
         await fetch("https://quizapi.io/api/v1/questions?apiKey=C8BWSol6V6TUpmrsb7Zz17pdZoQuzcB9enTsztNA&limit=" + number + "&difficulty=" + difficulty + "&tags=" + category)
         .then(response => response.json())
@@ -45,7 +50,8 @@ class Quiz {
         });
     }
 
-    //* load next question
+    //* =========== load next question =========== *//
+    ////  called from footer btns & getQuestion   ////
     nextQuestion(index) {
         let question = this.questions.getNextQuestion(index);
         let answers = this.questions.getNextAnswers(index);
@@ -57,7 +63,7 @@ class Quiz {
         this.interfaceEvents(this.interface.answers_on_display, "li"); 
     }
 
-    //* eventListeners
+    //* ============= EVENTLISTENERS ============= *//
     interfaceEvents(element, type) {
         switch (type) {
             //// back & forward buttons
@@ -150,7 +156,7 @@ class Quiz {
         }
     }
 
-    //* submit form eventListener
+    //* ======= FORM SUBMIT EVENTLISTENER ======== *//
     playerInfoSubmitEvent(content) {
         let form = this.interface.form;
         let name = content.name;
@@ -183,8 +189,7 @@ class Quiz {
         }
     }
 
-
-    //* ====== CHECK FINAL SCORE RESULTS ======= */
+    //* ======= CHECK FINAL SCORE RESULTS ========= */
     checkCorrect(player_chosen, quiz_corrects) {
         let player_is_corrects = [];   // send in booleans
         let player_corrects    = [];   // correctly answered strings
@@ -269,9 +274,7 @@ class Quiz {
             correct_answers,
             questions
         }
-    }//* end of checkCorrect
+    }
     
 
-
-    
 }
