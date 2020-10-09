@@ -67,6 +67,7 @@ class Player {
 
     //* UPDATE AVERAGE PERCENT
     updatePercent(percent) { //// varje svar
-        this.percent_average = (this.percent_average + percent) /  this.times_played;
+        let num = (this.percent_average + percent) /  this.times_played;
+        this.percent_average = Math.round(num * 10) / 10;
     }
 }
