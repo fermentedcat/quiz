@@ -174,10 +174,7 @@ class Quiz {
                 };
 
                 //// store values 
-                localStorage.setItem("name", name.value);
-                localStorage.setItem("number", number.value);
-                localStorage.setItem("difficulty", difficulty.value);
-                localStorage.setItem("category", category.value);
+                localStorage.setItem("form", JSON.stringify(info));
 
                 this.startQuiz(info); //// START QUIZ 
             } else {

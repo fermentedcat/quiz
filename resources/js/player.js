@@ -6,20 +6,44 @@ class Player {
         this.percent_average = 0;
         this.times_played = 0;
         this.current_answers; // indexes of chosen answers
-
     }
+
     //* update player every round
     updatePlayer(name, num_of_questions) { ////varje nytt spel
-        if (this.name != name) {    
+        let parsed = this.retrievePlayer(name);
+        if (parsed != false) {
+            this.name = name;
+            this.percent_average = parsed.percent_average;
+            this.all_time_score = parsed.all_time_score;
+            this.times_played = (parsed.times_played + 1);
+        } else {    
             this.name = name;   
-            this.percent = 0;
+            this.percent_average = 0;
             this.times_played = 1; //// if new player
-        } else {
-            this.times_played++;
         }
         this.score = 0;   
         this.current_answers = new Array(num_of_questions).fill([null]);
     }
+    //* add/update player to locaö storage
+    storePlayer() {
+        let info = {
+            all_time_score: this.all_time_score,
+            percent_average: this.percent_average,
+            times_played: this.times_played
+        };
+
+        let info_string = JSON.stringify(info);
+        localStorage.setItem(this.name, info_string);
+    }
+    //* retrieve player from local storage
+    retrievePlayer(name) {
+        if (localStorage.getItem(name) == null) {
+            return false;
+        } else {
+            return JSON.parse(localStorage.getItem(name));
+        }        
+    }
+
 
     //* save answers on click event (class Quiz)
     handleAnswers(index, option) { // option = index of answer option
@@ -69,5 +93,6 @@ class Player {
     updatePercent(percent) { //// varje svar
         let num = (this.percent_average + percent) /  this.times_played;
         this.percent_average = Math.round(num * 10) / 10;
+        this.storePlayer();
     }
 }

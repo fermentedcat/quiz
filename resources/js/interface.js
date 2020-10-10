@@ -120,18 +120,13 @@ class Interface {
                 });
             }});
 
-        //// if - annars tomma fält (inga placeholders/"förval")
-        if (localStorage.getItem("name")) {
-            name.value = localStorage.getItem("name");
-        }
-        if (localStorage.getItem("number")) {
-            number.value = localStorage.getItem("number");
-        }
-        if (localStorage.getItem("number")) {
-            difficulty.value = localStorage.getItem("difficulty");
-        }
-        if (localStorage.getItem("number")) {
-            category.value = localStorage.getItem("category");
+        //// if stored, fill in previous choices - no placeholders
+        if (localStorage.getItem("form")) {
+            let info = JSON.parse(localStorage.getItem("form"));
+            name.value       = info.name;
+            number.value     = info.quiz_length;
+            difficulty.value = info.difficulty;
+            category.value   = info.category;
         }
 
         return { // "form_content"
